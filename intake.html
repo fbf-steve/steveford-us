@@ -165,7 +165,26 @@
 
       <section class="step" data-step="3">
         <h2>Call Handling</h2>
-        <p class="step-sub">Added in a later task.</p>
+        <p class="step-sub">What should the agent be able to do on a call?</p>
+
+        <label>The agent should be able to:</label>
+        <div class="checkbox-row"><input type="checkbox" name="agent_capabilities" value="Book appointments" id="cap_book"><label for="cap_book">Book appointments</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="agent_capabilities" value="Take messages" id="cap_message"><label for="cap_message">Take messages</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="agent_capabilities" value="Answer FAQs" id="cap_faq"><label for="cap_faq">Answer FAQs</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="agent_capabilities" value="Transfer calls" id="cap_transfer"><label for="cap_transfer">Transfer calls</label></div>
+
+        <label>When booking, collect:</label>
+        <div class="checkbox-row"><input type="checkbox" name="booking_info_needed" value="Name" id="book_name" checked><label for="book_name">Name</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="booking_info_needed" value="Callback number" id="book_number" checked><label for="book_number">Callback number</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="booking_info_needed" value="Address" id="book_address" checked><label for="book_address">Address</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="booking_info_needed" value="Problem description" id="book_problem" checked><label for="book_problem">Problem description</label></div>
+        <div class="checkbox-row"><input type="checkbox" name="booking_info_needed" value="Preferred timing" id="book_timing" checked><label for="book_timing">Preferred timing</label></div>
+
+        <label>Transfer numbers (optional)</label>
+        <p class="field-hint">Add a row for each department/person calls might get transferred to.</p>
+        <div id="transfer-rows"></div>
+        <button type="button" class="btn btn-ghost" id="add-transfer-row" style="margin-top:10px">+ Add transfer number</button>
+
         <div class="nav-row"><button type="button" class="btn btn-ghost" onclick="prevStep()">Back</button><div class="spacer"></div><button type="button" class="btn btn-primary" onclick="nextStep()">Next</button></div>
       </section>
 
@@ -215,6 +234,11 @@
       { key: 'timezone', label: 'Timezone' },
       { key: 'service_area', label: 'Service area' },
       { key: 'after_hours_policy', label: 'After-hours policy' },
+    ]},
+    { step: 3, title: 'Call Handling', fields: [
+      { key: 'agent_capabilities', label: 'Agent can' },
+      { key: 'booking_info_needed', label: 'Collects when booking' },
+      { key: 'transfer_destinations', label: 'Transfer numbers' },
     ]},
   ];
 
@@ -310,6 +334,55 @@
       goToStep(Number(e.target.dataset.step));
     }
   });
+
+  let transferRows = [];
+
+  function addTransferRow(dept = '', number = '') {
+    transferRows.push({ id: transferRows.length ? Math.max(...transferRows.map(r => r.id)) + 1 : 1, dept, number });
+    renderTransferRows();
+  }
+
+  function removeTransferRow(id) {
+    transferRows = transferRows.filter(r => r.id !== id);
+    renderTransferRows();
+  }
+
+  function syncTransferData() {
+    formData.transfer_destinations = transferRows
+      .filter(r => r.dept || r.number)
+      .map(r => `${r.dept}: ${r.number}`);
+  }
+
+  function renderTransferRows() {
+    const container = document.getElementById('transfer-rows');
+    container.innerHTML = transferRows.map(r => `
+      <div class="checkbox-row" data-id="${r.id}" style="gap:10px">
+        <input type="text" placeholder="Department (e.g. Sales)" class="transfer-dept" value="${escapeHtml(r.dept)}" style="width:45%">
+        <input type="tel" placeholder="Phone number" class="transfer-number" value="${escapeHtml(r.number)}" style="width:45%">
+        <button type="button" class="btn btn-ghost transfer-remove" data-id="${r.id}">Remove</button>
+      </div>
+    `).join('');
+    container.querySelectorAll('.transfer-dept').forEach(el => {
+      const id = Number(el.closest('[data-id]').dataset.id);
+      el.addEventListener('input', () => {
+        transferRows.find(r => r.id === id).dept = el.value;
+        syncTransferData();
+      });
+    });
+    container.querySelectorAll('.transfer-number').forEach(el => {
+      const id = Number(el.closest('[data-id]').dataset.id);
+      el.addEventListener('input', () => {
+        transferRows.find(r => r.id === id).number = el.value;
+        syncTransferData();
+      });
+    });
+    container.querySelectorAll('.transfer-remove').forEach(el => {
+      el.addEventListener('click', () => removeTransferRow(Number(el.dataset.id)));
+    });
+    syncTransferData();
+  }
+
+  document.getElementById('add-transfer-row').addEventListener('click', () => addTransferRow());
 
   bindInputs();
   showStep(0);
