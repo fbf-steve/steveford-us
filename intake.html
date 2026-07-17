@@ -146,7 +146,20 @@
 
       <section class="step" data-step="2">
         <h2>Hours &amp; Service Area</h2>
-        <p class="step-sub">Added in a later task.</p>
+        <p class="step-sub">When are you open, and where do you work?</p>
+
+        <label for="business_hours">Business hours</label>
+        <textarea name="business_hours" id="business_hours" placeholder="e.g. Monday-Friday, 7:30am-5:30pm"></textarea>
+
+        <label for="timezone">Timezone</label>
+        <input type="text" name="timezone" id="timezone" placeholder="e.g. Central">
+
+        <label for="service_area">Service area</label>
+        <textarea name="service_area" id="service_area" placeholder="e.g. 30-mile radius around Lebanon, TN - Wilson County, Mt. Juliet, Hermitage, Nashville"></textarea>
+
+        <label for="after_hours_policy">After-hours / weekend policy</label>
+        <textarea name="after_hours_policy" id="after_hours_policy" placeholder="e.g. Weekends are emergency-only. 24/7 emergency line available."></textarea>
+
         <div class="nav-row"><button type="button" class="btn btn-ghost" onclick="prevStep()">Back</button><div class="spacer"></div><button type="button" class="btn btn-primary" onclick="nextStep()">Next</button></div>
       </section>
 
@@ -196,6 +209,12 @@
       { key: 'services_offered', label: 'Services offered' },
       { key: 'pricing_notes', label: 'Pricing notes' },
       { key: 'standard_service_fee', label: 'Standard service fee' },
+    ]},
+    { step: 2, title: 'Hours & Service Area', fields: [
+      { key: 'business_hours', label: 'Business hours' },
+      { key: 'timezone', label: 'Timezone' },
+      { key: 'service_area', label: 'Service area' },
+      { key: 'after_hours_policy', label: 'After-hours policy' },
     ]},
   ];
 
