@@ -190,7 +190,21 @@
 
       <section class="step" data-step="4">
         <h2>Emergencies &amp; Escalation</h2>
-        <p class="step-sub">Added in a later task.</p>
+        <p class="step-sub">Does your business have true emergencies, and how should the agent handle them?</p>
+
+        <label>Does your business have true emergencies?</label>
+        <div class="radio-row"><input type="radio" name="has_emergencies" value="Yes" id="emerg_yes"><label for="emerg_yes">Yes</label></div>
+        <div class="radio-row"><input type="radio" name="has_emergencies" value="No" id="emerg_no"><label for="emerg_no">No</label></div>
+
+        <label for="emergency_definition">What counts as an emergency for your business?</label>
+        <textarea name="emergency_definition" id="emergency_definition" placeholder="e.g. No heat/cooling in extreme weather, burst pipe, gas smell, sewage backup"></textarea>
+
+        <label for="emergency_script">Required safety language (optional)</label>
+        <textarea name="emergency_script" id="emergency_script" placeholder="e.g. If a caller reports a gas smell: tell them to leave the house immediately, not touch any switches, and call 911 and the gas company from outside."></textarea>
+
+        <label for="oncall_process">On-call / escalation process</label>
+        <textarea name="oncall_process" id="oncall_process" placeholder="e.g. Emergency is flagged and the on-call technician is notified immediately."></textarea>
+
         <div class="nav-row"><button type="button" class="btn btn-ghost" onclick="prevStep()">Back</button><div class="spacer"></div><button type="button" class="btn btn-primary" onclick="nextStep()">Next</button></div>
       </section>
 
@@ -239,6 +253,12 @@
       { key: 'agent_capabilities', label: 'Agent can' },
       { key: 'booking_info_needed', label: 'Collects when booking' },
       { key: 'transfer_destinations', label: 'Transfer numbers' },
+    ]},
+    { step: 4, title: 'Emergencies & Escalation', fields: [
+      { key: 'has_emergencies', label: 'Has true emergencies' },
+      { key: 'emergency_definition', label: 'What counts as an emergency' },
+      { key: 'emergency_script', label: 'Required safety language' },
+      { key: 'oncall_process', label: 'On-call process' },
     ]},
   ];
 
