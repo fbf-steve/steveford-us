@@ -210,7 +210,25 @@
 
       <section class="step" data-step="5">
         <h2>Tone &amp; Voice</h2>
-        <p class="step-sub">Added in a later task.</p>
+        <p class="step-sub">Last stretch — how should your agent sound?</p>
+
+        <label for="agent_name_preference">Agent name preference</label>
+        <input type="text" name="agent_name_preference" id="agent_name_preference" placeholder="e.g. Ava, or 'no preference, suggest one'">
+
+        <label>Tone</label>
+        <div class="radio-row"><input type="radio" name="tone" value="Warm & casual" id="tone_warm"><label for="tone_warm">Warm &amp; casual</label></div>
+        <div class="radio-row"><input type="radio" name="tone" value="Professional & polished" id="tone_pro"><label for="tone_pro">Professional &amp; polished</label></div>
+        <div class="radio-row"><input type="radio" name="tone" value="Playful" id="tone_playful"><label for="tone_playful">Playful</label></div>
+        <div class="radio-row"><input type="radio" name="tone" value="Formal" id="tone_formal"><label for="tone_formal">Formal</label></div>
+
+        <label>Voice gender preference</label>
+        <div class="radio-row"><input type="radio" name="voice_gender_preference" value="Male" id="voice_male"><label for="voice_male">Male</label></div>
+        <div class="radio-row"><input type="radio" name="voice_gender_preference" value="Female" id="voice_female"><label for="voice_female">Female</label></div>
+        <div class="radio-row"><input type="radio" name="voice_gender_preference" value="No preference" id="voice_none"><label for="voice_none">No preference</label></div>
+
+        <label for="never_say">Anything the agent should never say or do?</label>
+        <textarea name="never_say" id="never_say" placeholder="e.g. Never quote exact repair prices. Never argue with an upset caller."></textarea>
+
         <div class="nav-row"><button type="button" class="btn btn-ghost" onclick="prevStep()">Back</button><div class="spacer"></div><button type="button" class="btn btn-primary" onclick="nextStep()">Next</button></div>
       </section>
 
@@ -259,6 +277,12 @@
       { key: 'emergency_definition', label: 'What counts as an emergency' },
       { key: 'emergency_script', label: 'Required safety language' },
       { key: 'oncall_process', label: 'On-call process' },
+    ]},
+    { step: 5, title: 'Tone & Voice', fields: [
+      { key: 'agent_name_preference', label: 'Agent name preference' },
+      { key: 'tone', label: 'Tone' },
+      { key: 'voice_gender_preference', label: 'Voice gender preference' },
+      { key: 'never_say', label: 'Never say/do' },
     ]},
   ];
 
