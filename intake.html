@@ -129,7 +129,18 @@
 
       <section class="step" data-step="1">
         <h2>Services &amp; Pricing</h2>
-        <p class="step-sub">Added in a later task.</p>
+        <p class="step-sub">What do you do, and how should the agent talk about money?</p>
+
+        <label for="services_offered">Services you offer</label>
+        <textarea name="services_offered" id="services_offered" placeholder="e.g. AC repair, furnace repair, water heater installs, drain cleaning..."></textarea>
+
+        <label for="pricing_notes">Pricing notes for the agent</label>
+        <textarea name="pricing_notes" id="pricing_notes" placeholder="e.g. Diagnostic fee is $89, waived if repair proceeds. Free estimates on new installs. Financing available. Never quote exact repair prices."></textarea>
+        <p class="field-hint">This becomes the "what the agent can and can't say about money" section of the prompt.</p>
+
+        <label for="standard_service_fee">Standard service/diagnostic fee (optional)</label>
+        <input type="text" name="standard_service_fee" id="standard_service_fee" placeholder="e.g. $89, waived if repair proceeds">
+
         <div class="nav-row"><button type="button" class="btn btn-ghost" onclick="prevStep()">Back</button><div class="spacer"></div><button type="button" class="btn btn-primary" onclick="nextStep()">Next</button></div>
       </section>
 
@@ -180,6 +191,11 @@
       { key: 'contact_email', label: 'Contact email' },
       { key: 'contact_phone', label: 'Contact phone' },
       { key: 'website', label: 'Website' },
+    ]},
+    { step: 1, title: 'Services & Pricing', fields: [
+      { key: 'services_offered', label: 'Services offered' },
+      { key: 'pricing_notes', label: 'Pricing notes' },
+      { key: 'standard_service_fee', label: 'Standard service fee' },
     ]},
   ];
 
