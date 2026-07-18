@@ -316,6 +316,14 @@
     return div.innerHTML;
   }
 
+  function escapeAttr(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function updateFormData(el) {
     const name = el.name;
     if (!name) return;
@@ -421,8 +429,8 @@
     const container = document.getElementById('transfer-rows');
     container.innerHTML = transferRows.map(r => `
       <div class="checkbox-row" data-id="${r.id}" style="gap:10px">
-        <input type="text" placeholder="Department (e.g. Sales)" class="transfer-dept" value="${escapeHtml(r.dept)}" style="width:45%">
-        <input type="tel" placeholder="Phone number" class="transfer-number" value="${escapeHtml(r.number)}" style="width:45%">
+        <input type="text" placeholder="Department (e.g. Sales)" class="transfer-dept" value="${escapeAttr(r.dept)}" style="width:45%">
+        <input type="tel" placeholder="Phone number" class="transfer-number" value="${escapeAttr(r.number)}" style="width:45%">
         <button type="button" class="btn btn-ghost transfer-remove" data-id="${r.id}">Remove</button>
       </div>
     `).join('');
