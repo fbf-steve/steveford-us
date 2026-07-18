@@ -101,6 +101,7 @@
 
   <div class="card">
     <form id="intake-form">
+      <input type="checkbox" name="botcheck" id="botcheck" style="display:none" tabindex="-1" autocomplete="off">
 
       <section class="step" data-step="0">
         <h2>Business Basics</h2>
@@ -236,7 +237,19 @@
         <h2>Review &amp; Submit</h2>
         <p class="step-sub">Check everything looks right, then send it over.</p>
         <div id="review-content"></div>
-        <div class="nav-row"><button type="button" class="btn btn-ghost" onclick="prevStep()">Back</button><div class="spacer"></div><button type="button" class="btn btn-primary" id="submit-btn">Submit</button></div>
+        <div id="submit-error"></div>
+        <div class="nav-row" id="review-nav">
+          <button type="button" class="btn btn-ghost" onclick="prevStep()">Back</button>
+          <div class="spacer"></div>
+          <button type="button" class="btn btn-primary" id="submit-btn" onclick="submitForm()">Submit</button>
+        </div>
+      </section>
+
+      <section class="step" data-step="7" id="confirm-step">
+        <div class="confirm">
+          <h2>Thanks — got it!</h2>
+          <p>I'll follow up within a business day to talk through the details and put together your agent.</p>
+        </div>
       </section>
 
     </form>
@@ -430,6 +443,75 @@
 
   bindInputs();
   showStep(0);
+
+  const WEB3FORMS_ACCESS_KEY = 'REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY';
+
+  function buildPlainTextSummary() {
+    return FIELD_GROUPS.map(group => {
+      const lines = group.fields.map(f => {
+        let value = formData[f.key];
+        if (Array.isArray(value)) value = value.join(', ');
+        return value ? `${f.label}: ${value}` : null;
+      }).filter(Boolean);
+      return `${group.title}\n${lines.join('\n')}`;
+    }).join('\n\n');
+  }
+
+  function showConfirm() {
+    document.querySelectorAll('.step').forEach(sec => sec.classList.remove('active'));
+    document.getElementById('confirm-step').classList.add('active');
+    document.getElementById('progress').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showSubmitError() {
+    const summary = buildPlainTextSummary();
+    const mailBody = encodeURIComponent(summary);
+    const mailto = `mailto:steve@steveford.us?subject=${encodeURIComponent('Intake form (manual submit): ' + (formData.business_name || 'Unknown business'))}&body=${mailBody}`;
+    document.getElementById('submit-error').innerHTML = `
+      <div class="error-box">
+        <p>Something went wrong sending this automatically. Your answers aren't lost — copy them or email them directly and I'll get it.</p>
+        <button type="button" class="btn btn-ghost" id="copy-answers-btn">Copy my answers</button>
+        <a href="${mailto}" class="btn btn-ghost" style="margin-left:10px;text-decoration:none;display:inline-flex">Email my answers</a>
+      </div>`;
+    document.getElementById('copy-answers-btn').addEventListener('click', () => {
+      navigator.clipboard.writeText(summary).then(() => {
+        document.getElementById('copy-answers-btn').textContent = 'Copied!';
+      });
+    });
+  }
+
+  async function submitForm() {
+    const submitBtn = document.getElementById('submit-btn');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+    document.getElementById('submit-error').innerHTML = '';
+
+    const payload = Object.assign({}, formData, {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: `New intake form: ${formData.business_name || 'Unknown business'}`,
+      botcheck: document.getElementById('botcheck').checked,
+    });
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        showConfirm();
+      } else {
+        showSubmitError();
+      }
+    } catch (err) {
+      showSubmitError();
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit';
+    }
+  }
 </script>
 </body>
 </html>
