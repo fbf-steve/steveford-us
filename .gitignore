@@ -1,1 +1,4 @@
 .fuse_hidden*
+
+# wrangler local cache - contains the Cloudflare account id and account name
+.wrangler/
